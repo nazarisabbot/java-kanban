@@ -1,12 +1,11 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
+    static int id = 0;
+
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
     HashMap<Integer, Subtask> subTasks = new HashMap<>();
-
-    private int id = 0;
 
     // Получение списков задач
     public String getListOfTask() {
@@ -42,7 +41,7 @@ public class TaskManager {
     }
 
     public void updateEpic(Epic epic) {
-        epics.put(epic.getId(id), epic);
+        epics.put(epic.getId(), epic);
     }
 
     public void updateSubTask(Subtask subtask) {
@@ -66,16 +65,29 @@ public class TaskManager {
 
     // Создание задачи
     public void createTask(Task newTask) {
+        id++;
+        newTask.setId(id);
         tasks.put(id, newTask);
     }
 
     public void createEpic(Epic newTask) {
+        id++;
+        newTask.setId(id);
         epics.put(id, newTask);
     }
 
-    public void createSubTask(Subtask newTask) {
-        subTasks.put(id, newTask);
+    public void addSubtaskToEpic(int epicId, Subtask subtask) {
+        Epic epic = epics.get(epicId);
+        if (epic != null) {
+            id++;
+            subtask.setId(id);
+            subTasks.put(id, subtask);
+            epic.addSubtask(subtask);
+        } else {
+            System.out.println("Эпик c id " + epicId + " не найден.");
+        }
     }
+
     /* end */
 
     // Удаление по идентификатору
@@ -89,6 +101,16 @@ public class TaskManager {
 
     public void deleteSubTask(int id) {
         subTasks.remove(id);
+    }
+
+    @Override
+    public String toString() {
+        return "TaskManager{" +
+                "tasks=" + tasks +
+                ", epics=" + epics +
+                ", subTasks=" + subTasks +
+                ", id=" + id +
+                '}';
     }
     /* end */
 
