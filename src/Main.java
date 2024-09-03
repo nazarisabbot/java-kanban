@@ -1,3 +1,10 @@
+import tracker.model.Epic;
+import tracker.model.Subtask;
+import tracker.model.Task;
+import tracker.controllers.TaskManager;
+
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -5,84 +12,91 @@ public class Main {
         TaskManager manager = new TaskManager();
 
         // Создаем первый task
-        Task firstTask = new Task("First name", "First description");
+        int firstTaskId = manager.increaseId();
+        Task firstTask = new Task(firstTaskId,"First name", "First description");
         manager.createTask(firstTask);
-        int firstTaskId = firstTask.getId();
 
         // Создаем второй task
-        Task secondTask = new Task("Second name", "Second description");
+        int secondTaskId = manager.increaseId();
+        Task secondTask = new Task(secondTaskId,"Second name", "Second description");
         manager.createTask(secondTask);
 
         // Создаем epic c двумя подзадачами
-        Epic firstEpic = new Epic("FirstEpic name", "FirstEpic description");
+        int firstEpicId = manager.increaseId();
+        Epic firstEpic = new Epic(firstEpicId, "FirstEpic name", "FirstEpic description");
         manager.createEpic(firstEpic);
-        int firstEpicId = firstEpic.getId();
 
         // Создаем первую подзадачу
-        Subtask firstSubtask = new Subtask("First subtask name", "First subtask description");
+        int firstSubTaskId = manager.increaseId();
+        Subtask firstSubtask = new Subtask(firstSubTaskId,"First subtask name", "First subtask description", firstEpicId);
         manager.addSubtaskToEpic(firstEpicId, firstSubtask);
-        int firstSubTaskId = firstSubtask.getId();
 
         // Создаем вторую подзадачу
-        Subtask secondSubtask = new Subtask("Second subtask name", "Second subtask description");
+        int secondSubTaskId = manager.increaseId();
+        Subtask secondSubtask = new Subtask(secondSubTaskId,"Second subtask name", "Second subtask description", firstEpicId);
         manager.addSubtaskToEpic(firstEpicId, secondSubtask);
-        int secondSubTaskId = secondSubtask.getId();
 
         // Создаем epic c одной подзадачей
-        Epic secondEpic = new Epic("SecondEpic name", "SecondEpic description");
+        int secondEpicId = manager.increaseId();
+        Epic secondEpic = new Epic(secondEpicId,"SecondEpic name", "SecondEpic description");
         manager.createEpic(secondEpic);
-        int secondEpicId = secondEpic.getId();
 
         // Создаем единственную подзадачу
-        Subtask ownSubtask = new Subtask("Own subtask name", "Own subtask description");
+        int ownSubtaskId = manager.increaseId();
+        Subtask ownSubtask = new Subtask(ownSubtaskId,"Own subtask name", "Own subtask description", secondEpicId);
         manager.addSubtaskToEpic(secondEpicId, ownSubtask);
 
         System.out.println("Печать первого Task");
-        System.out.println(firstTask.toString());
+        System.out.println(firstTask);
         System.out.println("Печать второго Task");
-        System.out.println(secondTask.toString());
+        System.out.println(secondTask);
         System.out.println("Печать первого Epic");
-        System.out.println(firstEpic.toString());
+        System.out.println(firstEpic);
         System.out.println("Печать второго Epic");
-        System.out.println(secondEpic.toString());
+        System.out.println(secondEpic);
+
+        // Получаем список подзадач определенного Эпика
+        ArrayList<Subtask> subtasksOfEpic = manager.getEpicSubtasks(firstEpicId);
+        System.out.println("Ниже список подзадач первого эпика");
+        System.out.println(subtasksOfEpic);
 
         // Обновляем статус у первого Task
-        manager.updateStatusTask(firstTaskId, "IN_PROGRESS");
+        Task updateTaskStatusFirst = manager.updateStatusTask(firstTaskId, "IN_PROGRESS");
         System.out.println("Печать обновленного статуса первого Task на in_progress");
-        System.out.println(firstTask.getStatus());
+        System.out.println(updateTaskStatusFirst);
 
-        manager.updateStatusTask(firstTaskId, "DONE");
+        Task updateTaskStatusSecond = manager.updateStatusTask(firstTaskId, "DONE");
         System.out.println("Печать обновленного статуса первого Task на done");
-        System.out.println(firstTask.getStatus());
+        System.out.println(updateTaskStatusSecond);
 
         // Обновляем статус у первой подзадачи первого эпика
-        manager.updateStatusSubTask(firstEpicId, firstSubTaskId, "IN_PROGRESS");
+        Subtask firstUpdateSubTask = manager.updateStatusSubTask(firstEpicId, firstSubTaskId, "IN_PROGRESS");
         System.out.println("Печать обновленного статуса первой подзадачи первого эпика на in_progress");
-        System.out.println(firstSubtask.getStatus());
+        System.out.println(firstUpdateSubTask);
 
         // Обновляем статус у первого эпика
-        manager.updateStatusEpic(firstEpicId);
+        Epic updateEpicStatusFirst = manager.updateStatusEpic(firstEpicId);
 
         // Печать эпика после того как изменили статус у одной из подзадачи
         // теперь его статус не NEW, а IN_PROGRESS
         System.out.println("Печать обновленного статуса первого эпика на in_progress");
-        System.out.println(firstEpic.getStatus());
+        System.out.println(updateEpicStatusFirst);
 
         // Обновим статус обоих подзадач на DONE
-        manager.updateStatusSubTask(firstEpicId, firstSubTaskId, "DONE");
-        manager.updateStatusSubTask(firstEpicId, secondSubTaskId, "DONE");
+        Subtask secondUpdateSubTask = manager.updateStatusSubTask(firstEpicId, firstSubTaskId, "DONE");
+        Subtask thirdUpdateSubTask = manager.updateStatusSubTask(firstEpicId, secondSubTaskId, "DONE");
 
         // Проверяем статус обоих подзадач
         System.out.println("Печать обновленного статуса обоих подзадач на done");
-        System.out.println(firstSubtask.getStatus());
-        System.out.println(secondSubtask.getStatus());
+        System.out.println(secondUpdateSubTask);
+        System.out.println(thirdUpdateSubTask);
 
         // Обновляем статус эпика
-        manager.updateStatusEpic(firstEpicId);
+        Epic updateEpicStatusSecond = manager.updateStatusEpic(firstEpicId);
 
-        // Проверяем статус эпика, ондолжен быть DONE
+        // Проверяем статус эпика, он должен быть DONE
         System.out.println("Печать обновленного статуса первого эпика на done");
-        System.out.println(firstEpic.getStatus());
+        System.out.println(updateEpicStatusSecond);
 
         // Удаляем первый Task
         manager.deleteTask(firstTaskId);
