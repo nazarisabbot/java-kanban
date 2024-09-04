@@ -11,12 +11,12 @@ import java.util.HashMap;
 public class TaskManager {
     private static int id = 0;
 
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subTasks = new HashMap<>();
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
 
-    public int increaseId() {
-        return TaskManager.id = TaskManager.id + 1;
+    private int increaseId() {
+        return ++id;
     }
 
     // Получение списков задач
@@ -177,23 +177,14 @@ public class TaskManager {
 
     // Получение задачи по идентификатору
     public Task getTask(int id) {
-        if (tasks.get(id) == null) {
-            return null;
-        }
         return tasks.get(id);
     }
 
     public Epic getEpic(int id) {
-        if (epics.get(id) == null) {
-            return null;
-        }
         return epics.get(id);
     }
 
     public Subtask getSubTask(int id) {
-        if (subTasks.get(id) == null) {
-            return null;
-        }
         return subTasks.get(id);
     }
 
@@ -212,22 +203,32 @@ public class TaskManager {
     /* end */
 
     // Создание задачи
-    public void createTask(Task newTask) {
+    public int createTask(String name, String description) {
+        int newId = increaseId();
+        Task newTask = new Task(newId, name, description);
         tasks.put(id, newTask);
+        return newId;
     }
 
-    public void createEpic(Epic newTask) {
-        epics.put(id, newTask);
+    public int createEpic(String name, String description) {
+        int newId = increaseId();
+        Epic newEpic = new Epic(newId, name, description);
+        epics.put(id, newEpic);
+        return newId;
     }
 
-    public void addSubtaskToEpic(int epicId, Subtask subtask) {
+    public int addSubtaskToEpic(int epicId, String name, String description) {
+        int newId = increaseId();
+        Subtask newSubtask = new Subtask(newId, name, description, epicId);
+        subTasks.put(newId, newSubtask);
+
         Epic epic = epics.get(epicId);
         if (epic != null) {
-            epic.addSubtask(subtask);
-            subTasks.put(subtask.getId(), subtask);
+            epic.addSubtask(newSubtask);
         } else {
             System.out.println("Эпик c id " + epicId + " не найден.");
         }
+        return newId; // Возвращаем id новой подзадачи
     }
     /* end */
 
@@ -244,13 +245,6 @@ public class TaskManager {
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subTasks.remove(subtaskId);
         }
-    }
-
-    public void deleteSubTask(int id) {
-        if (subTasks.get(id) == null) {
-            System.out.println("Подзадача c id " + id + " не найден!");
-        }
-        subTasks.remove(id);
     }
 
     public void deleteSubtask(int id) {
@@ -272,18 +266,5 @@ public class TaskManager {
                 ", subTasks=" + subTasks +
                 ", id=" + id +
                 '}';
-    }
-
-    // Пришлось прописать сеттеры, так как редактор ругается :=(
-    public void setTasks(HashMap<Integer, Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public void setEpics(HashMap<Integer, Epic> epics) {
-        this.epics = epics;
-    }
-
-    public void setSubTasks(HashMap<Integer, Subtask> subTasks) {
-        this.subTasks = subTasks;
     }
 }

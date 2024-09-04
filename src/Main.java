@@ -12,48 +12,34 @@ public class Main {
         TaskManager manager = new TaskManager();
 
         // Создаем первый task
-        int firstTaskId = manager.increaseId();
-        Task firstTask = new Task(firstTaskId,"First name", "First description");
-        manager.createTask(firstTask);
+        int firstTaskId = manager.createTask("First name", "First description");
 
         // Создаем второй task
-        int secondTaskId = manager.increaseId();
-        Task secondTask = new Task(secondTaskId,"Second name", "Second description");
-        manager.createTask(secondTask);
+        int secondTaskId = manager.createTask("Second name", "Second description");
 
         // Создаем epic c двумя подзадачами
-        int firstEpicId = manager.increaseId();
-        Epic firstEpic = new Epic(firstEpicId, "FirstEpic name", "FirstEpic description");
-        manager.createEpic(firstEpic);
+        int firstEpicId = manager.createEpic("FirstEpic name", "FirstEpic description");
 
         // Создаем первую подзадачу
-        int firstSubTaskId = manager.increaseId();
-        Subtask firstSubtask = new Subtask(firstSubTaskId,"First subtask name", "First subtask description", firstEpicId);
-        manager.addSubtaskToEpic(firstEpicId, firstSubtask);
+        int firstSubTaskId = manager.addSubtaskToEpic(firstEpicId, "First subtask name", "First subtask description");
 
         // Создаем вторую подзадачу
-        int secondSubTaskId = manager.increaseId();
-        Subtask secondSubtask = new Subtask(secondSubTaskId,"Second subtask name", "Second subtask description", firstEpicId);
-        manager.addSubtaskToEpic(firstEpicId, secondSubtask);
+        int secondSubTaskId = manager.addSubtaskToEpic(firstEpicId, "Second subtask name", "Second subtask description");
 
         // Создаем epic c одной подзадачей
-        int secondEpicId = manager.increaseId();
-        Epic secondEpic = new Epic(secondEpicId,"SecondEpic name", "SecondEpic description");
-        manager.createEpic(secondEpic);
+        int secondEpicId = manager.createEpic("SecondEpic name", "SecondEpic description");
 
         // Создаем единственную подзадачу
-        int ownSubtaskId = manager.increaseId();
-        Subtask ownSubtask = new Subtask(ownSubtaskId,"Own subtask name", "Own subtask description", secondEpicId);
-        manager.addSubtaskToEpic(secondEpicId, ownSubtask);
+        int ownSubtaskId = manager.addSubtaskToEpic(secondEpicId, "Own subtask name", "Own subtask description");
 
         System.out.println("Печать первого Task");
-        System.out.println(firstTask);
+        System.out.println(manager.getTask(firstTaskId));
         System.out.println("Печать второго Task");
-        System.out.println(secondTask);
+        System.out.println(manager.getTask(secondTaskId));
         System.out.println("Печать первого Epic");
-        System.out.println(firstEpic);
+        System.out.println(manager.getEpic(firstEpicId));
         System.out.println("Печать второго Epic");
-        System.out.println(secondEpic);
+        System.out.println(manager.getEpic(secondEpicId));
 
         // Получаем список подзадач определенного Эпика
         ArrayList<Subtask> subtasksOfEpic = manager.getEpicSubtasks(firstEpicId);
