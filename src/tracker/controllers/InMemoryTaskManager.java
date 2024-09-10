@@ -11,7 +11,7 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     static int id = 0;
-
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
@@ -190,7 +190,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {
         if (tasks.get(id) != null) {
-            addTaskToHistory(tasks.get(id));
+            historyManager.addTaskToHistory(tasks.get(id));
         }
         return tasks.get(id);
     }
@@ -198,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {
         if (epics.get(id) != null) {
-            addTaskToHistory(epics.get(id));
+            historyManager.addTaskToHistory(epics.get(id));
         }
         return epics.get(id);
     }
@@ -206,7 +206,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubTask(int id) {
         if (subTasks.get(id) != null) {
-            addTaskToHistory(subTasks.get(id));
+            historyManager.addTaskToHistory(subTasks.get(id));
         }
         return subTasks.get(id);
     }
@@ -294,19 +294,7 @@ public class InMemoryTaskManager implements TaskManager {
     // Отображение последних 10 задач
     @Override
     public List<Task> getHistory() {
-        return taskHistory;
-    }
-
-    public void addTaskToHistory(Task task) {
-        if (taskHistory.contains(task)) {
-            taskHistory.remove(task);
-        }
-
-        taskHistory.add(task);
-
-        if (taskHistory.size() > 10) {
-            taskHistory.removeFirst();
-        }
+        return historyManager.getHistory();
     }
     /* end */
 
