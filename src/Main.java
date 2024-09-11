@@ -1,5 +1,6 @@
 import tracker.controllers.Managers;
 import tracker.controllers.TaskManager;
+import tracker.model.Subtask;
 import tracker.model.Task;
 
 
@@ -25,12 +26,14 @@ public class Main {
         printAllTasks(manager);
 
         // Создаем первую подзадачу
-        int firstSubTaskId = manager.addSubtaskToEpic(firstEpicId, "First subtask name", "First subtask description");
+        Subtask firstSubTask = new Subtask(Subtask.UNASSIGNED_ID, "First subtask name", "First subtask description", firstEpicId);
+        int firstSubTaskId = manager.addSubtaskToEpic(firstSubTask);
         manager.getSubTask(firstSubTaskId);
         printAllTasks(manager);
 
         // Создаем вторую подзадачу
-        int secondSubTaskId = manager.addSubtaskToEpic(firstEpicId, "Second subtask name", "Second subtask description");
+        Subtask secondSubTask = new Subtask(Subtask.UNASSIGNED_ID, "Second subtask name", "Second subtask description", firstEpicId);
+        int secondSubTaskId = manager.addSubtaskToEpic(secondSubTask);
         manager.getSubTask(secondSubTaskId);
         printAllTasks(manager);
 
@@ -40,7 +43,8 @@ public class Main {
         printAllTasks(manager);
 
         // Создаем единственную подзадачу
-        int ownSubtaskId = manager.addSubtaskToEpic(secondEpicId, "Own subtask name", "Own subtask description");
+        Subtask ownSubtask = new Subtask(Subtask.UNASSIGNED_ID, "Own subtask name", "Own subtask description", secondEpicId);
+        int ownSubtaskId = manager.addSubtaskToEpic(ownSubtask);
         manager.getSubTask(ownSubtaskId);
         printAllTasks(manager);
 

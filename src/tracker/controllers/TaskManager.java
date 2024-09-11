@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    default int increaseId() {
-        return ++InMemoryTaskManager.id;
-    }
-
     // Получение списков задач
     ArrayList<Task> getTasks();
 
@@ -28,7 +24,7 @@ public interface TaskManager {
     void deleteSubtasks();
 
     // Обновление задачи
-    // Я вот тут не понял если честно :-) как именно это про тестировать
+    // Я вот тут не понял если честно:-) как именно это протестировать,
     // но я так понял, что это задача на вторую итерацию
     void updateTask(Task task);
 
@@ -37,11 +33,7 @@ public interface TaskManager {
     void updateSubTask(Subtask subtask);
 
     // Обновление статуса задачи
-    Task updateStatusTask(int id, String newStatus);
-
     Epic updateStatusEpic(int id);
-
-    Subtask updateStatusSubTask(int idEpic, int idSubTask, String newStatus);
 
     // Получение задачи по идентификатору
     Task getTask(int id);
@@ -58,7 +50,7 @@ public interface TaskManager {
 
     int createEpic(String name, String description);
 
-    int addSubtaskToEpic(int epicId, String name, String description);
+    int addSubtaskToEpic(Subtask newSubtask);
 
     // Удаление по идентификатору
     void deleteTask(int id);
