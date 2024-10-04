@@ -15,7 +15,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
-    private final List<Task> taskHistory = new ArrayList<>(10);
 
     public int increaseId() {
         return ++id;
@@ -98,7 +97,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(id);
         if (epic != null) {
             ArrayList<Subtask> subtasks = epic.getSubTasks();
-            if (subtasks == null) {
+            if (subtasks == null || subtasks.isEmpty()) {
                 epic.setStatus(ProgressStatus.NEW);
             } else {
 
@@ -220,6 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Task c id " + id + " не найден!");
         }
         tasks.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -227,6 +227,7 @@ public class InMemoryTaskManager implements TaskManager {
         final Epic epic = epics.remove(id);
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subTasks.remove(subtaskId);
+            historyManager.remove(subtaskId);
         }
     }
 
@@ -239,10 +240,11 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getEpicId());
         epic.removeSubtask(id);
         updateStatusEpic(epic.getId());
+        historyManager.remove(id);
     }
     /* end */
 
-    // Отображение последних 10 задач
+    // Отображение истории задач
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
