@@ -1,17 +1,23 @@
 import tracker.controllers.TaskManager;
 import tracker.controllers.Managers;
 import tracker.model.Subtask;
+import tracker.model.Epic;
+import tracker.model.Task;
 
 public class Main {
     public static void main(String[] args) {
         TaskManager manager = Managers.getDefault();
 
         // Создаем две задачи
-        int firstTaskId = manager.createTask("First Task", "Description of First Task");
-        int secondTaskId = manager.createTask("Second Task", "Description of Second Task");
+        Task firstTask = new Task(Task.UNASSIGNED_ID, "First Task", "Description of First Task");
+        int firstTaskId = manager.createTask(firstTask);
+
+        Task secondTask = new Task(Task.UNASSIGNED_ID, "Second Task", "Description of Second Task");
+        int secondTaskId = manager.createTask(secondTask);
 
         // Создаем эпик с тремя подзадачами
-        int firstEpicId = manager.createEpic("First Epic", "Description of First Epic");
+        Epic firstEpic = new Epic(Epic.UNASSIGNED_ID, "First Epic", "Description of First Epic");
+        int firstEpicId = manager.createEpic(firstEpic);
 
         Subtask firstSubTask = new Subtask(Subtask.UNASSIGNED_ID, "Subtask 1 of First Epic", "Description of Subtask 1", firstEpicId);
         int subtask1Id = manager.addSubtaskToEpic(firstSubTask);
@@ -23,7 +29,8 @@ public class Main {
         int subtask3Id = manager.addSubtaskToEpic(thirdSubTask);
 
         // Создаем эпик без подзадач
-        int secondEpicId = manager.createEpic("Second Epic", "Description of Second Epic");
+        Epic secondEpic = new Epic(Epic.UNASSIGNED_ID, "Second Epic", "Description of Second Epic");
+        int secondEpicId = manager.createEpic(secondEpic);
 
         // Запрашиваем задачи несколько раз в разном порядке и добавляем их в историю
         manager.getTask(firstTaskId);

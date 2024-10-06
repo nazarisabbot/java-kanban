@@ -3,6 +3,7 @@ package tracker.model;
 import java.util.Objects;
 
 public class Task {
+    public static final int UNASSIGNED_ID = -1;
     private String name;
     private String description;
     private int id;

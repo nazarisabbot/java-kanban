@@ -7,11 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final HashMap<Integer, Node> taskHistory = new HashMap<>();
-    Node head = null;
-    Node tail = null;
 
-    public void linkLast(Task task) {
+    private static class Node {
+        public Task task;
+        public Node next;
+        public Node prev;
+
+        public Node(Task task) {
+            this.task = task;
+        }
+    }
+
+    private final HashMap<Integer, Node> taskHistory = new HashMap<>();
+    private Node head = null;
+    private Node tail = null;
+
+    private void linkLast(Task task) {
         Node newHistoryElem = new Node(task);
         int taskId = task.getId();
 

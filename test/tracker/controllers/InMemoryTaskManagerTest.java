@@ -22,18 +22,21 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addNewTask() {
-        final int taskId = taskManager.createTask("Test", "Test description");
+        Task newTask = new Task(Task.UNASSIGNED_ID, "Test", "Test description");
+        final int taskId = taskManager.createTask(newTask);
         final Task task = taskManager.getTask(taskId);
         assertNotNull(task, "Task не найден");
 
-        final int epicId = taskManager.createEpic("Test", "Test description");
+        Epic newEpic = new Epic(Epic.UNASSIGNED_ID, "Test", "Test description");
+        final int epicId = taskManager.createEpic(newEpic);
         final Task epic = taskManager.getEpic(epicId);
         assertNotNull(epic, "Epic не найден");
     }
 
     @Test
     void historyMaintainsPastVersions() {
-        int taskId = taskManager.createTask("Task", "Description");
+        Task newTask = new Task(Task.UNASSIGNED_ID, "Task", "Description");
+        int taskId = taskManager.createTask(newTask);
         taskManager.getTask(taskId);
 
         List<Task> historyTasks = historyManager.getHistory();
@@ -44,7 +47,8 @@ class InMemoryTaskManagerTest {
     @Test
     void deleteSubtaskShouldRemoveSubtaskAndUpdateEpic() {
         // Создание эпика с подзадачей
-        final int epicId = taskManager.createEpic("Test", "Test that id not exist");
+        Epic newEpic = new Epic(Epic.UNASSIGNED_ID, "Test", "Test that id not exist");
+        final int epicId = taskManager.createEpic(newEpic);
         Subtask firstSubTask = new Subtask(Subtask.UNASSIGNED_ID, "First subTask", "Description", epicId);
         taskManager.addSubtaskToEpic(firstSubTask);
 

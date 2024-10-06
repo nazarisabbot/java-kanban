@@ -180,18 +180,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     // Создание задачи
     @Override
-    public int createTask(String name, String description) {
+    public int createTask(Task newTask) {
         int newId = increaseId();
-        Task newTask = new Task(newId, name, description);
-        tasks.put(id, newTask);
+        newTask.setId(newId);
+        tasks.put(newId, newTask);
         return newId;
     }
 
     @Override
-    public int createEpic(String name, String description) {
+    public int createEpic(Epic newEpic) {
         int newId = increaseId();
-        Epic newEpic = new Epic(newId, name, description);
-        epics.put(id, newEpic);
+        newEpic.setId(newId);
+        epics.put(newId, newEpic);
         return newId;
     }
 
