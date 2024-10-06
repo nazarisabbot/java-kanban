@@ -46,9 +46,9 @@ public interface TaskManager {
     ArrayList<Subtask> getEpicSubtasks(int epicId);
 
     // Создание задачи
-    int createTask(String name, String description);
+    int createTask(Task task);
 
-    int createEpic(String name, String description);
+    int createEpic(Epic task);
 
     int addSubtaskToEpic(Subtask newSubtask);
 
