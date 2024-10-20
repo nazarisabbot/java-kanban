@@ -7,7 +7,6 @@ import tracker.model.Task;
 import tracker.model.TaskType;
 
 import java.io.*;
-import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
