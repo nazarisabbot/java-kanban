@@ -62,8 +62,6 @@ public class InMemoryTaskManager implements TaskManager {
     /* end */
 
     // Обновление задачи
-    // Я вот тут не понял если честно:-) как именно это протестировать,
-    // но я так понял, что это задача на вторую итерацию
     @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);

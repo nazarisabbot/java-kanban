@@ -21,6 +21,9 @@ public class Epic extends Task {
         subTasks.clear();
     }
 
+    @Override
+    public TaskType getType() {return TaskType.EPIC;}
+
     public ArrayList<Integer> getSubtaskIds() {
         ArrayList<Integer> listOfIds = new ArrayList<>();
         for (Subtask task : subTasks) {
