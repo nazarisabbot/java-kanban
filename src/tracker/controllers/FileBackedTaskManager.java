@@ -1,5 +1,6 @@
 package tracker.controllers;
 
+import tracker.exceptions.ManagerSaveException;
 import tracker.model.Epic;
 import tracker.model.ProgressStatus;
 import tracker.model.Subtask;
@@ -31,16 +32,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.write(taskToString(task));
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (ManagerSaveException e) {
-            throw new ManagerSaveException("Error saving tasks to file");
+            throw new ManagerSaveException("Error saving tasks to file", e);
         }
     }
 
     public String taskToString(Task task) {
         String epicId = "";
 
-        if (task instanceof Subtask) {
+        if (task.getType() == TaskType.SUBTASK) {
             epicId = String.valueOf(((Subtask) task).getEpicId());
         }
 
@@ -53,26 +52,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epicId);
     }
 
-    public void loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine(); // Читаем заголовок и пропускаем его
             while ((line = reader.readLine()) != null) {
                 Task task = fromString(line);
                 switch (task.getType()) {
                     case TASK:
-                        updateTask(task);
+                        manager.updateTask(task);
                         break;
                     case EPIC:
-                        updateEpic((Epic) task);
+                        manager.updateEpic((Epic) task);
                         break;
                     case SUBTASK:
-                        updateSubTask((Subtask) task);
+                        manager.updateSubTask((Subtask) task);
                         break;
                 }
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new ManagerSaveException("Error loading tasks from file", e);
         }
+        return manager;
     }
 
     public static Task fromString(String value) {

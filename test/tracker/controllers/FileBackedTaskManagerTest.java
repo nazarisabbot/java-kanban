@@ -1,7 +1,7 @@
 package tracker.controllers;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Task;
@@ -32,11 +32,13 @@ class FileBackedTaskManagerTest {
     @Test
     public void testSaveAndLoadEmptyFile() {
         manager.save();
-        manager.loadFromFile(tempFile);
 
-        assertTrue(manager.getTasks().isEmpty());
-        assertTrue(manager.getEpics().isEmpty());
-        assertTrue(manager.getSubTasks().isEmpty());
+        // Использование статического метода для восстановления данных
+        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+
+        assertTrue(loadedManager.getTasks().isEmpty());
+        assertTrue(loadedManager.getEpics().isEmpty());
+        assertTrue(loadedManager.getSubTasks().isEmpty());
     }
 
     @Test
@@ -54,8 +56,8 @@ class FileBackedTaskManagerTest {
             System.out.println(line);
         }
 
-        FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
-        loadedManager.loadFromFile(tempFile);
+        // Использование статического метода для восстановления данных
+        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
 
         List<Task> tasks = loadedManager.getTasks();
 
@@ -63,5 +65,4 @@ class FileBackedTaskManagerTest {
         assertEquals(firstTask, tasks.get(0));
         assertEquals(secondTask, tasks.get(1));
     }
-
 }
